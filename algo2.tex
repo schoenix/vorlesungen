@@ -229,15 +229,16 @@ Aufwandsabschätzung von Las-Vegas-Algorithmen nach unten.
 
 \subsubsection{Strategien}
 \begin{itemize}
+	\item Bei \(reinen~Strategien\) legt sich der Spieler eindeutig auf eine bestimmte Aktion fest, daher der Einheitsvektor \(e\)
 	\item Die Zeilen von \(M\) heißen Strategien von \(A\), die Spalten von \(M\) heißen Strategien von \(B\)
 	\item Zeile \(i\) ist eine optimale Strategie für \(A\), falls sie den Mindestgewinn: \(min_j~M_{ij}\) von \(A\) maximiert
 	\item Spalte \(j\) ist eine optimale Strategie für \(B\), falls sie den Maximalverlust: \(max_i~M_{ij}\) von \(B\) minimiert
-	\item Wählen beide optimale Strategien: \(max_i~min_j~M_{ij} \leq Gewinn(A) \leq min_j~max_i~M_{ij}\)
+	\item Wählen beide optimale Strategien: \(max_i~min_j~M_{ij} \leq \mathbb{E} \lbrack Gewinn(A) \rbrack \leq min_j~max_i~M_{ij}\)
 \end{itemize}
 
 
 \subsection{MiniMax-Theorem}
-Das Min-Max-Theorem ist ein grundlegendes Lösungskonzept in der Spieltheorie. Die Minimierung der gegnerischen Maximal-Auszahlung beider Spieler steht im Vordergrund und ist Ursache für die Entstehung der \textit{Bezeichnung Min-Max-Theorem}.\footnote{\url{http://de.wikipedia.org/wiki/Min-Max-Theorem}}
+Das Min-Max-Theorem ist ein grundlegendes Lösungskonzept in der Spieltheorie. Die Minimierung der gegnerischen Maximal-Auszahlung beider Spieler steht im Vordergrund und ist Ursache für die Entstehung der Bezeichnung \textit{Min-Max-Theorem}.\footnote{\url{http://de.wikipedia.org/wiki/Min-Max-Theorem}}
 
 \subsubsection{Definitionen}
 \begin{enumerate}
@@ -257,7 +258,7 @@ Das Min-Max-Theorem ist ein grundlegendes Lösungskonzept in der Spieltheorie. D
 \subsubsection{Loomis Satz}
 \[max_p~min_j~(p^T \cdot M \cdot e_j) = min_q~max_i~(e_i^T \cdot M \cdot q)\]
 
-Für ein festes \(p\) wird \(p^T \cdot M \cdot q\) minimiert, wenn die j-te Koordinate von \(p^T \cdot M\) minimal ist (siehe Satz von Loomi).
+Für ein festes \(p\) wird \(p^T \cdot M \cdot q\) minimiert, wenn die j-te Koordinate von \(p^T \cdot M\) minimal ist.
 
 
 \subsection{Yoas Technik}
@@ -309,9 +310,9 @@ Ziel dabei: Möglichst kleine RZBs mit wenigen Zerlegungen.
 
 
 \subsection{Binäre Zerlegung des Raums}
-Folgender Algorithmus erzeugt binäre RZBs für den Raum:
+Folgender Algorithmus erzeugt binäre RZBs für den \(\mathbb{R}^3\):
 \text{}\\
-\input{algo2/algo_bzr}
+\input{algo2/algo_brz}
 
 \subsubsection{Satz}
 \(Z\) bezeichnet die Anzahl der von \(BRZ\) erzeugten Teilsegmente der \(P_i\). Es gilt:
@@ -352,16 +353,17 @@ bildet den Halbraum \(u^{\leq}\).
 \subsubsection{Polarmenge}
 \begin{itemize}
 	\item Der Menge eines Vektorraums wird eine Menge des Dualraums zugeordnet (und umgekehrt)
-	\item Diese \textit{Polarmenge} ist konvex und abgeschlossen
+	\item Beinhaltet die dualen Punkte zu den Hyperebenen
 	\item \(M_p = \{u~|~M \subset u^{\leq}\}\) und \(M_{pp} = \{x~|~M_p \subset x^{\leq}\}\)
+	\item Konvex und abgeschlossen
 \end{itemize}
 
 \subsubsection{Berechnung der Konvexen Hülle mit Hilfe von Polarmengen}
-Die Konvexe Hülle von \(M := \{p_1,...,p_i\) kann daher so berechnet werden:
+Die Konvexe Hülle von \(M := \{p_1,...,p_i\}\) kann daher als Schnitt der Halbräume, die aus den Punkten dualisiert wurden, berechnet werden:
 \[M_p \longleftarrow Schnitt~der~HRe~p_i^{\leq}.\]
 Dabei bestimmen die Ecken
 \[u_i := p_{i_1}^* \cap ... \cap p_{i_d}^*\]
-von \(M_p\), die Schnitte von je \(d\) Ebenen der Dualmenge \(M^*\) sind. Die Punkte \(p_{i_1},...,p_{i_d}\) spannen die Facetten von \(\lbrack M \rbrack\) auf.
+von \(M_p\), die Schnitte von je \(d\) Ebenen der Dualmenge \(M^*\). Die Punkte \(p_{i_1},...,p_{i_d}\) spannen die Facetten von \(\lbrack M \rbrack\) auf.
 
 
 \subsection{Beziehungen zwischen Knoten, Kanten und Facetten}
@@ -388,6 +390,7 @@ Darüber hinaus bedeutet es, dass Konvexe Hüllen als Schnitt dualer Halbräume 
 \paragraph{Beweis}
 
 \subsection{Konstruktion Konvexer Hüllen}
+Die Berechnung der Konvexen Hülle über die Punktmenge ist vergleichsweise aufwendig. Da die Berechnung von Ebenenschnitten deutlich günstiger ist, bietet es sich an, alle Punkte der Ausgangsmenge zu dualisieren und die Ebenenschnitte zu berechnen. Danach können die Ebenen, welche die Konvexe Hülle aufspannen, wieder zu Punkten dualisiert werden.
 
 \paragraph{Datenstruktur zur Speicherung der Polyeder}
 Darstellung durch eine Liste der Ecken des Polyeders, wobei die Listenelemente (die Ecken) jeweils folgendes enthalten:
@@ -399,6 +402,8 @@ Darstellung durch eine Liste der Ecken des Polyeders, wobei die Listenelemente (
 Mithilfe dieser Polyederdarstellung lassen sich alle Kanten und Facetten mit einem Aufwand \(\in \mathcal{O}(|Ecken|)\) ausgeben.
 \text{}\\\\
 \input{algo2/algo_konvexe-huelle}
+\text{}\\
+Gesamtlaufzeit \(\in \mathcal{O}(nlogn)\).
 
 
 
@@ -441,13 +446,21 @@ Es gibt ein universelles Steuerwort \(w\), das für alle Startpunkte innerhalb e
 \\\\
 \(R\) kann somit alle endlichen Steuerworte erzeugen und sich nach ihnen bewegen, spätestens mit dem universellen findet er das Ziel.
 
+\paragraph{Finden des universellen Steuerwortes}
+Operationen, die nicht durchführbar sind, werden ignoriert.
+\begin{enumerate}
+	\item Berechne das Steuerwort für einen beliebigen Polygoneckpunkt
+	\item Für alle weiteren Eckpunkte: Erweitere das bestehende Steuerwort sukszessive durch Konkatenation weiterer Schritte
+	\item Ergänze \(lz\) für Startpunkte, die keine Polygoneckpunkte sind
+\end{enumerate}
+
 
 \subsection{Behälterproblem}
 \textbf{Ziel:} Zerlege eine Folge \(A := (a_1,...,a_m)\) in möglichst wenig Teilfolgen \(A_j\) mit einer bestimmten Größe \(h\) (dieses Problem ist NP-hart).
 \text{}\\\\
 \input{algo2/algo_firstfit}
 \text{}\\\\
-Die Laufzeit ist in \(\mathcal{O}(n)\). Während \textit{FIRST-FIT} packt, ist immer höchstens ein Behälter halb voll oder leerer, da sonst kein zusätzlicher Behälter gebraucht werden würde. Benötigt \textit{FIRST-FIT} also \(k\) Behälter, werden auch bei einer optimalen Packung mindestens
+Die Laufzeit ist in \(\mathcal{O}(n)\). Während \textit{FIRST-FIT} packt, ist immer höchstens ein Behälter halb voll oder leerer, da sonst ein zusätzlicher Behälter gebraucht werden würde. Benötigt \textit{FIRST-FIT} also \(k\) Behälter, werden auch bei einer optimalen Packung mindestens
 \[k_{opt} > \frac{k}{2}\]
 gebraucht. Somit ist
 \[m < 2k_{opt}.\]
@@ -1263,6 +1276,9 @@ das Symbol eines Unterteilungsalgorithmus. Die Teilmatrizen
 \[\Gamma_i := \lbrack \gamma_{i-2j} \rbrack_{j \in \mathbb{Z}^2}\]
 für \(i=(0,0),~(1,0),~(0,1),~(1,1)\) heißen \textit{Masken}. Sie werden graphisch dargestellt, indem die \(\gamma_{i-2j} \ne 0\) an die Punkte eines Teilnetzes geschrieben werden, mt denen sie multipliziert werden. Der resultierende, gewichtete Punkt wird durch einem ausgefüllten, schwarzen Punkt gekennzeichnet.
 
+\subsubsection{Beispiel: Verfeinerungsschema}
+Das Verfeinerungsschema \((U_1,U_1)\) erhöht die "`Auflösung"' eines Netzes, in dem zusätzliche Kontrollpunkte in der Mitte von Strecken und Flächen eingefügt werden.
+
 \subsubsection{Beispiel: Mittelungsoperator}
 Der Mittelungsoperator \((M,M)\) mit dem Symbol
 \[\mu(x,y)= \frac{1}{4}(1+x)(1+y)\]
@@ -1280,81 +1296,57 @@ Unterteilungsalgorithmen für regelmäßige Dreiecksnetze können als Unterteilu
 
 \section{Textsuche}
 Im Folgenden bezeichnet \(A\) ein Alphabet, \(t = t_1,...,t_n \in A^n\) einen Text und \(s = s_1,...s_m \in A^m\) einen Suchtext, für den bestimmt werden soll, ob er in \(t\) und gegebenenfalls an welcher Stelle er auftritt. Es wird vorausgesetzt, dass \(m < n\).
-\text{}\\
+
+\subsection{Naive Textsuche}
 \input{algo2/algo_naive-textsuche}
 Der Aufwand für diesen Algorithmus liegt im schlechtesten Fall in \(\Theta(m\cdot n)\).
 
 
-\subsection{Die Vorkommensheuristik (Bad-Character-Heuristik)}
-Im Algorithmus \textit{NAIVE-SUCHE} wird \(i\) um jeweils \(1\) erhöht, d.h. der Suchtext wird verschoben. Man kann \(i\) oft um mehr als \(1\) erhöhen, wenn man für jedes Zeichen \(a \in A\) weiß, an welcher Stelle \(\nu\) es in \(s\) vorkommt. Dies wird durch die \textit{Vorkommensfunktion} beschrieben:
+\subsection{Der Algorithmus von Boyer und Moore}
+Der Algorithmus von Boyer und Moore erweitert die \textit{Naive Suche} um die \textit{Vorkommens- und Suffixheuristiken}.
+
+Um das Vorgehen effizient zu gestalten, wird für beide Heuristiken in einem Vorverarbeitungsschritt jeweils eine Sprungtabelle errechnet. Die Sprungtabelle für die Bad-Character-Heuristik enthält für jedes im Suchmuster vorkommende Zeichen den Abstand von der Position des letzten Vorkommens im Suchmuster bis zum Ende des Suchmusters.
+
+Die Tabelle für die Good-Suffix-Heuristik enthält für jedes Teilmuster (von hinten aus gesehen) den Abstand vom Ende des Musters, ab dem es wieder im Muster vorkommt.\footnote{\url{http://de.wikipedia.org/wiki/Boyer-Moore-Algorithmus}}
+
+\subsubsection{Die Vorkommensheuristik (Bad-Character-Heuristik)}
+Im Algorithmus \textit{NAIVE-SUCHE} wird \(i\) um jeweils \(1\) erhöht, d.h. der Suchtext wird verschoben. Man kann \(i\) oft um mehr als \(1\) erhöhen, wenn man für jedes Zeichen \(a \in A\) weiß, an welcher Stelle \(\nu\) es in \(s\) zuletzt vorkommt. Dies wird durch die \textit{Vorkommensfunktion} beschrieben:
 \[\nu \rightarrow \{0,...,m\}\]
 \[a \mapsto \nu(a),\]
 wobei
 \[\nu(a) := min\{k~|~a \notin s_{k+1},...,s_m~und~(a=s_k \lor k=0)\}\]
 
-\subsubsection{Vorgehen anschaulich}
+\paragraph{Vorgehen anschaulich}
 Die Beschreibung entstammt der deutschen Wikipedia\footnote{\url{http://de.wikipedia.org/wiki/Boyer-Moore-Algorithmus}}.
 \begin{itemize}
 	\item Muster wird linksbündig unter den Text geschrieben und von rechts nach links mit dem Text verglichen
-	\item Sobald ein Mismatch auftritt, wird berechnet wie weit das Suchmuster nach rechts verschoben werden kann
+	\item Sobald ein Mismatch auftritt, wird berechnet wie weit das Suchmuster nach rechts verschoben werden kann, wobei das Zeichen des Texts gilt
 	\item Existiert der entsprechende Buchstabe nicht im Muster, kann um die ganze Länge des Musters verschoben werden
 \end{itemize}
 Die Funktion \(\nu\) kann mit einem Aufwand in \(\mathcal{O}(|A|+m)\) vorberechnet werden.
 
 
-\subsection{Die Suffix-Heuristik (Good-Suffix-Heuristik)}
-Mit einer zweiten Heuristik lässt sich die Laufzeit der Naiven Suche noch weiter reduzieren, so dass sie in \(\mathcal{O}(n+m)\) liegt.
+\subsubsection{Die Suffix-Heuristik (Good-Suffix-Heuristik)}
+Mit einer zweiten Heuristik lässt sich die Laufzeit der \textit{Naiven Suche} noch weiter reduzieren, so dass sie in \(\mathcal{O}(n+m)\) liegt.
 
 \subsubsection{Vorgehen anschaulich}
-Stimmt beim Vergleich des Musters mit dem Text von rechts nach links ein Suffix des Musters mit dem Text überein und tritt danach aber ein Mismatch auf, wird das Muster soweit nach rechts geschoben, bis ein Teilwort des Musters wieder auf das Suffix passt. Existiert das Suffix kein zweites Mal im Muster, wird das Muster um seine volle Länge nach rechts verschoben\footnote{\url{http://de.wikipedia.org/wiki/Boyer-Moore-Algorithmus}}.
+Stimmt beim Vergleich des Musters mit dem Text von rechts nach links ein Suffix des Musters mit dem Text überein und tritt danach aber ein Mismatch auf, wird das Muster soweit nach rechts geschoben, bis ein Teilwort des Musters wieder auf das Suffix passt. Existiert das Suffix kein zweites Mal im Muster, wird das Muster um seine volle Länge nach rechts verschoben\footnote{\url{http://de.wikipedia.org/wiki/Boyer-Moore-Algorithmus\#Algorithmus}}.
 
+\subsubsection{Berechnung der Suffixvorkommensfunktion}
+Die Heuristik berechnet für jedes Zeichen des Suchworts, wie weit von diesem aus verschoben werden kann. Grundlage ist dabei die Gamma-Funktion, welche für jedes Zeichen des Suchworts die Länge des größten, echten Präsuffixes angibt.
 
-\subsection{Der Algorithmus von Boyer und Moore}
-Der Algorithmus von Boyer und Moore erweitert die Naive Suche um die Vorkommens- und Suffixheuristiken.
-\\\\
-Um das Vorgehen effizient zu gestalten, wird für beide Heuristiken in einem Vorverarbeitungsschritt jeweils eine Sprungtabelle errechnet. Die Sprungtabelle für die Bad-Character-Heuristik enthält für jedes im Suchmuster vorkommende Zeichen den Abstand von der Position des letzten Vorkommens im Suchmuster bis zum Ende des Suchmusters. Die Tabelle für die Good-Suffix-Heuristik enthält für jedes Teilmuster (von hinten aus gesehen) den Abstand vom Ende des Musters, ab dem es wieder im Muster vorkommt.\footnote{\url{http://de.wikipedia.org/wiki/Boyer-Moore-Algorithmus}}
-\\\\
-\input{algo2/algo_boyer-moore}
-In der Praxis trägt die Suffixheuristik kaum zu Beschleunigung bei. Sie verhindert lediglich eine worst-case-Laufzeit in \(\Theta(m\cdot n)\).
+\paragraph{Definition Präsuffix}
+Ein Präfix eines Wortes \(w\), das zugleich ein Suffix von \(w\) ist, nennen wir Präsuffix von \(w\) und bezeichnen das größte echte Präsuffix mit \(geps(w)\).
 
-
-\subsection{Berechnung der Suffixvorkommensfunktion}
-
-\subsubsection{Definition Präsuffix}
-Ein Präfix eines Wortes \(w\), das zugleich ein Suffix von \(w\) ist, nennen wir Präsuffix von \(w\) und das größte echte Präsuffix \(geps(w)\).
-\\\\
-Sei \(w_j := s_{j+1},...,s_m\) und
-\[\gamma(j) := |gpes(w_j)|.\]
-Die \(gpes\)-Länge ist für \(j=0,...,m-1\) definiert. Insbesondere ist \(\gamma(m-1)=0\).
-
-Mit Hilfe von \(\gamma\) lässt sich die Funktion \(\sigma\) so darstellen:
-\[\sigma(j) = min\Big( \{k\in \{1,...,j\} ~|~\gamma(j-k) = m-j\} \cup \{m-\gamma(0)\}\Big).\]
-Aus
-\[\gamma(j-k) = m-j\]
-folgt mit \(i := j-k\)
-\[j = m-\gamma(i)~und\]
-\[k = m-\gamma(i)-1.\]
-
-\subsubsection{Berechnung von \(\sigma\)}
-\begin{itemize}
-	\item Eingabe: \(\gamma(0,...,m)\)
-	\item Ausgabe: \(\sigma(1,...,m)\)
-\end{itemize}
-
-\text{}\\
-\input{algo2/algo_boyer-moore_sigma}
-It \(\gamma\) bekannt, ist die Laufzeit von \(\sigma\) linear in \(m\).
+Sei \(w_j := s_{j+1},...,s_m\) und \(\gamma(j) := |gpes(w_j)|\). Die \(gpes\)-Länge ist für \(j=0,...,m-1\) definiert, insbesondere ist \(\gamma(m-1)=0\).
 
 \subsubsection{Berechnung von \(\gamma\)}
+Die Funktion berechnet für jedes Zeichen des Suchworts die Länge des größten, echten Präsuffixes.
+
 \(gpes(w_{i-1})\) verkürzt um \(s_i\) ist ebenfalls Präsuffix von \(w_i\), daher gilt
 \[\gamma(i-1) -1 \leq \gamma(i).\]
 Falls \(j := m-\gamma(i)\) und \(s_i \ne s_j\), ist \(geps(w_{i-1})\) verkürzt um \(s_i\) auch Präsuffix von \(w_j\). Daraus folgt der Algorithmus:
-\begin{itemize}
-	\item Eingabe: \(s_1,...,s_m\)
-	\item Ausgabe: \(\gamma(0,...,m-1)\)
-\end{itemize}
-
-\text{}\\
+\\\\
 \input{algo2/algo_boyer-moore_gamma}
 
 \subsubsection{Aufwand von \(\gamma\)}
@@ -1363,5 +1355,16 @@ Der Aufwand für \(\gamma\) liegt in \(\mathcal{O}(m)\), denn
 	\item \(j\) wird in Zeile \(5\) erhöht
 	\item und in Zeile \(3\) wegen Zeile \(9\) jeweils um \(1\) größer.
 \end{itemize}
-Da \(j\) anfangs \(m\) ist und immer \(\leq m\) ist, wird \(j\) höchstens \((m-1)\)-mal in Schritt \(5\) erhöht.
+Da \(j\) anfangs \(m\) ist und immer \(\leq m\) bleibt, wird \(j\) höchstens \((m-1)\)-mal in Schritt \(5\) erhöht.
 
+\paragraph{Berechnung von \(\sigma\)}
+Die \(\sigma\)-Funktion gibt unmittelbar an, wie weit verschoben werden kann.
+\text{}\\
+\input{algo2/algo_boyer-moore_sigma}
+It \(\gamma\) bekannt, ist die Laufzeit von \(\sigma\) linear in \(m\).
+
+\subsubsection{Bemerkung}
+In der Praxis trägt die Suffixheuristik kaum zu Beschleunigung bei. Sie verhindert lediglich eine worst-case-Laufzeit in \(\Theta(m\cdot n)\).
+
+\subsubsection{Der Algorithmus}
+\input{algo2/algo_boyer-moore}

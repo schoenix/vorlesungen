@@ -7,7 +7,7 @@ Aufstellung und Erläuterung aller Algorithmen der Vorlesung Vorlesung "`Algorit
 
 \subsubsection{Eingaben}
 \begin{itemize}
-	\item Rationale Eingaben: Terminiert sicher für alle rationalen Eingaben\footnote{\url{http://de.wikipedia.org/wiki/Algorithmus_von_Ford_und_Fulkerson\#Zur_Korrektheit_des_Algorithmus}}
+	\item Rationale Eingaben: Terminiert sicher für alle rationalen Eingaben
 	\item Irrationale Kapazitäten: Terminiert nicht, da der Algorithmus unendliche lange laufen kann (und auch nicht gegen den maximalen Fluss konvergieren muss) oder ein falsches Ergebnis liefert\footnote{\url{http://www.cs.huji.ac.il/~nati/PAPERS/ALGORITHMS/zwick.pdf}}
 \end{itemize}
 
@@ -15,7 +15,8 @@ Aufstellung und Erläuterung aller Algorithmen der Vorlesung Vorlesung "`Algorit
 \begin{itemize}
 	\item Beweis von Ford und Fulkerson: Ein \(q-s\) - Fluss ist dann maximal, wenn es keinen augmentierenden (erhöhenden) Pfad gibt
 	\item Während der Durchführung erhöht sich der Fluss in jedem Schritt
-	\item Terminiert, da \(W_f\) immer um mindestens \(1\) erhöht wird und \(W_f \leq \sum k(q,V) < \infty\) (ganzzahlige Kapazitäten)
+	\item Terminiert bei ganzzaligen Eingaben, da \(W_f\) immer um mindestens \(1\) erhöht wird und \(W_f \leq \sum k(q,V) < \infty\)
+	\item Terminiert bei rationalen Eingaben, da der Fluss stets mindestens um \(\frac{1}{Hauptnenner}\) erhöht wird
 \end{itemize}
 
 \subsubsection{Laufzeit}
@@ -159,7 +160,7 @@ Es gilt außerdem:
 \subsection{BZR (Binäre Zerlegung des Raum)}
 Rekursive Zerlegung eines Polyeders des \(\mathbb{R}^3\) anhand einiger Polygone. Pro Iterationsschritt wird jeweils ein Polygon bestimmt (bevorzugt eines, das den Polyeder komplett zerlegt). Dieses teilt den Polyeder in einen linken und einen rechten Teilpolyeder, die jeweils weiter zerlegt werden.
 \text{}\\
-\input{algo2/algo_bzr}
+\input{algo2/algo_brz}
 
 
 \subsection{Konstruktion konvexer Hüllen}
@@ -172,6 +173,8 @@ Die konvexe Hülle einer Teilmenge ist die kleinste konvexe Menge, die die Ausga
 	\item Jeder Knoten hat den Grad \(3\)
 \end{itemize}
 \input{algo2/algo_konvexe-huelle}
+\text{}\\
+Gesamtlaufzeit \(\in \mathcal{O}(nlogn)\).
 
 
 \subsection{Pledge Startegie}
@@ -392,7 +395,7 @@ Es kommt vor, dass die beiden Heuristiken unterschiedliche Verschiebungen berech
 \input{algo2/algo_boyer-moore}
 
 \subsubsection{Vorkommensfunktion}
-Im Naiven Algorithmus wird der Suchtext, wenn er nicht übereinstimmt, immer um eine Stelle weitergeschoben, dies kann man verbessern wenn man die Position \(\nu\) kennt an der ein Zeichen a im Suchtext s vorkommt. Dabei ist \(\nu(a)\) die letzte Position an der ein Zeichen a vorkommt (Oder falls es gar nicht vorkommt eben 0).
+Im Naiven Algorithmus wird der Suchtext, wenn er nicht übereinstimmt, immer um eine Stelle weitergeschoben, dies kann man verbessern wenn man die Position \(\nu\) kennt an der ein Zeichen a im Suchtext s zuletzt vorkommt vorkommt (oder falls es gar nicht vorkommt gilt \(nu(a) = 0)\).
 
 \(\nu(a) = min\{k|a \notin s_{k+1},...,s_m\}\) und \(a = s_k \lor k = 0\)
 
@@ -410,6 +413,6 @@ Ein Präfix eines Wortes \(w\), das zugleich ein Suffix von \(w\) ist, nennen wi
 \input{algo2/algo_boyer-moore_gamma}
 
 \subsubsection{Berechnung der Heuristik}
-Die Heuristik berechnet für jedes Zeichen des Suchwort, wie weit dieses verschoben werden kann. Grundlage ist dabei die Gamma-Funktion, welche für jedes Zeichen des Suchworts die Länge des größten, echten Präsuffixes angibt.
+Die Heuristik berechnet für jedes Zeichen des Suchworts, wie weit dieses verschoben werden kann. Grundlage ist dabei die Gamma-Funktion, welche für jedes Zeichen des Suchworts die Länge des größten, echten Präsuffixes angibt.
 \text{}\\
 \input{algo2/algo_boyer-moore_sigma}
